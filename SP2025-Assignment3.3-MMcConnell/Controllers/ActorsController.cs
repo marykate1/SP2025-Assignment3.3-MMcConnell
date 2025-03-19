@@ -167,5 +167,18 @@ namespace SP2025_Assignment3._3_MMcConnell.Controllers
         {
             return _context.Actors.Any(e => e.Id == id);
         }
+        public async Task<IActionResult> GetActorImage(int id)
+        {
+            var actor = await _context.Actors
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (actor == null)
+            {
+                return NotFound();
+
+            }
+            return File(actor.ActorImage, "image/jpg");
+
+
+        }
     }
 }

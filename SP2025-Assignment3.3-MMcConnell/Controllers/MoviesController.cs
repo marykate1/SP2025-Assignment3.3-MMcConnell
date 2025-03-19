@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing.Imaging;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -8,6 +10,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SP2025_Assignment3._3_MMcConnell.Data;
 using SP2025_Assignment3._3_MMcConnell.Models;
+using System.Drawing;
+using System.Drawing.Imaging;
+using System.IO;
+
 
 namespace SP2025_Assignment3._3_MMcConnell.Controllers
 {
@@ -66,25 +72,73 @@ namespace SP2025_Assignment3._3_MMcConnell.Controllers
         }
 
         // POST: Movies/Create
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> Create([Bind("Id,Title,Genre,Year,IMDBlink,MovieImage")] Movie movie, IFormFile MovieImage)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        if (MovieImage != null && MovieImage.Length > 0)
+        //        {
+        //            using (var memoryStream = new MemoryStream())
+        //            {
+        //                await MovieImage.CopyToAsync(memoryStream);
+        //                movie.MovieImage = memoryStream.ToArray(); // Save the image as byte array
+        //            }
+        //        }
+
+        //        _context.Add(movie);
+        //        await _context.SaveChangesAsync();
+        //        return RedirectToAction(nameof(Index));
+        //    }
+        //    return View(movie);
+        //}
+        // POST: Movies/Create
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Title,Genre,Year,IMDBlink,MovieImage")] Movie movie, IFormFile MovieImage)
+        public async Task<IActionResult> Create([Bind("Title,Genre,Year,IMDBlink,MovieImage")] Movie movie, IFormFile MovieImage)
         {
+            ViewData["MovieImageError"] = "";
+            ModelState.Remove(nameof(movie.MovieImage));
+
             if (ModelState.IsValid)
             {
                 if (MovieImage != null && MovieImage.Length > 0)
                 {
-                    using (var memoryStream = new MemoryStream())
+                    using var memoryStream = new MemoryStream();
+                    await MovieImage.CopyToAsync(memoryStream);
+
+                    // Resize the image
+                    try
                     {
-                        await MovieImage.CopyToAsync(memoryStream);
-                        movie.MovieImage = memoryStream.ToArray(); // Save the image as byte array
+                        using var originalImage = Image.FromStream(memoryStream);
+                        int newHeight = 250;
+                        int newWidth = (int)((double)originalImage.Width / originalImage.Height * newHeight);
+
+                        using var resizedImage = new Bitmap(originalImage, newWidth, newHeight);
+                        using var outputMemoryStream = new MemoryStream();
+
+                        resizedImage.Save(outputMemoryStream, ImageFormat.Jpeg); // Save as JPEG
+                        movie.MovieImage = outputMemoryStream.ToArray();
                     }
+                    catch (Exception ex)
+                    {
+                        ViewData["MovieImageError"] = "Error resizing image: " + ex.Message;
+                        movie.MovieImage = memoryStream.ToArray(); // Save original image if resize fails
+                    }
+                }
+                else
+                {
+                    movie.MovieImage = new byte[0];
                 }
 
                 _context.Add(movie);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+
             return View(movie);
         }
 
@@ -182,6 +236,19 @@ namespace SP2025_Assignment3._3_MMcConnell.Controllers
         private bool MovieExists(int id)
         {
             return _context.Movies.Any(e => e.Id == id);
+        }
+        public async Task<IActionResult> GetMovieImage(int id)
+        {
+            var movie = await _context.Movies
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (movie == null)
+            {
+                return NotFound();
+
+            }
+            return File(movie.MovieImage, "image/jpg");
+
+
         }
     }
 }

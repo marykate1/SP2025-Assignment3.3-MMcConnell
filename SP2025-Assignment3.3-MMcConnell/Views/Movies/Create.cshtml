@@ -66,6 +66,19 @@
     <div class="text-center mt-3">
         <a href="@Url.Action("Index", "Movies")">Back to Movies List</a>
     </div>
+    <script>
+        window.onload = function () {
+            let errorMessages = "";
+        @foreach (var modelError in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+        {
+            @:errorMessages += "@modelError.ErrorMessage\n";
+        }
+            if (errorMessages !== "") {
+                alert(errorMessages);
+            }
+        };
+    </script>
+
 </div>
 
 @section Scripts {

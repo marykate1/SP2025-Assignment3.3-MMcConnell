@@ -102,18 +102,22 @@ namespace SP2025_Assignment3._3_MMcConnell.Services
 
             // Define positive and negative words
             string[] positiveWords = { "good", "great", "excellent", "amazing", "awesome", "fantastic", "love", "like", "enjoy",
-                                "wonderful", "satisfying", "happy", "nice", "positive", "impressive", "brilliant", "perfect",
-                                "delightful", "outstanding", "superb", "marvelous", "fabulous", "pleasant", "cheerful",
-                                "recommend", "fun", "favorite", "cool", "must", "superior", "engaged", "awesome", "classic",
-                                "iconic", "memorable", "fascinating", "absorbing", "remarkable", "impactful", "interesting",
-                                "compelling", "masterpiece", "moving", "heartfelt", "intense", "riveting", "stellar" };
+                     "wonderful", "satisfying", "happy", "nice", "positive", "impressive", "brilliant", "perfect",
+                     "delightful", "outstanding", "superb", "marvelous", "fabulous", "pleasant", "cheerful",
+                     "recommend", "fun", "favorite", "cool", "must", "superior", "engaged", "awesome", "classic",
+                     "iconic", "memorable", "fascinating", "absorbing", "remarkable", "impactful", "interesting",
+                     "compelling", "masterpiece", "moving", "heartfelt", "intense", "riveting", "stellar",
+                     "congratulations", "best", "signed up", "bullrun", "beautiful", "support", "positive impact",
+                     "admirable", "loyalty", "fan", "historical", "generous" };
 
             string[] negativeWords = { "bad", "horrible", "terrible", "awful", "hate", "dislike", "poor", "worst", "sad",
-                                "disappointing", "boring", "unpleasant", "frustrating", "annoying", "dreadful",
-                                "mediocre", "lousy", "unhappy", "miserable", "inferior", "pathetic", "atrocious", "abysmal",
-                                "overrated", "garbage", "waste", "dishonest", "false", "yawn", "misleading", "overhyped",
-                                "forgettable", "dull", "predictable", "underwhelming", "tedious", "uninspired", "flawed",
-                                "annoying", "exaggerated", "painful", "displeased", "cringy" };
+                     "disappointing", "boring", "unpleasant", "frustrating", "annoying", "dreadful",
+                     "mediocre", "lousy", "unhappy", "miserable", "inferior", "pathetic", "atrocious", "abysmal",
+                     "overrated", "garbage", "waste", "dishonest", "false", "yawn", "misleading", "overhyped",
+                     "forgettable", "dull", "predictable", "underwhelming", "tedious", "uninspired", "flawed",
+                     "annoying", "exaggerated", "painful", "displeased", "cringy", "forgot", "redundant",
+                     "backwards", "biased", "slave", "propaganda", "extreme", "misguided", "downvoted", "opposed",
+                     "confused", "unrealistic", "narrowing", "contradictory", "disillusioned" };
 
             int positiveScore = 0;
             int negativeScore = 0;
@@ -147,6 +151,96 @@ namespace SP2025_Assignment3._3_MMcConnell.Services
                 return "neutral";
             }
         }
+      //  private static double CalculateSentimentScore(string commentText)
+        //{
+        //    string normalizedText = commentText.ToLower().Trim();
+
+        //    string[] positiveWords = { "good", "great", "excellent", "amazing", "awesome", "fantastic", "love", "like", "enjoy",
+        //                            "wonderful", "satisfying", "happy", "nice", "positive", "impressive", "brilliant", "perfect",
+        //                            "delightful", "outstanding", "superb", "marvelous", "fabulous", "pleasant", "cheerful",
+        //                            "recommend", "fun", "favorite", "cool", "must", "superior", "engaged", "iconic", "memorable",
+        //                            "fascinating", "absorbing", "remarkable", "impactful", "interesting", "masterpiece", "moving",
+        //                            "heartfelt", "intense", "riveting", "stellar" };
+
+        //    string[] negativeWords = { "bad", "horrible", "terrible", "awful", "hate", "dislike", "poor", "worst", "sad",
+        //                            "disappointing", "boring", "unpleasant", "frustrating", "annoying", "dreadful",
+        //                            "mediocre", "lousy", "unhappy", "miserable", "inferior", "pathetic", "atrocious", "abysmal",
+        //                            "overrated", "garbage", "waste", "dishonest", "false", "yawn", "misleading", "overhyped",
+        //                            "forgettable", "dull", "predictable", "underwhelming", "tedious", "uninspired", "flawed",
+        //                            "cringy", "exaggerated", "painful", "displeased" };
+
+        //    string[] words = normalizedText.Split(new char[] { ' ', '.', ',', '!', '?', ';', ':' }, StringSplitOptions.RemoveEmptyEntries);
+
+        //    int positiveScore = 0;
+        //    int negativeScore = 0;
+
+        //    foreach (string word in words)
+        //    {
+        //        if (positiveWords.Contains(word))
+        //        {
+        //            positiveScore++;
+        //        }
+        //        else if (negativeWords.Contains(word))
+        //        {
+        //            negativeScore++;
+        //        }
+        //    }
+
+        //    // Calculate sentiment score
+        //    int totalWords = words.Length;
+        //    double sentimentScore = 0;
+
+        //    if (totalWords > 0)
+        //    {
+        //        sentimentScore = (double)(positiveScore - negativeScore) / totalWords;
+        //    }
+
+        //    return Math.Max(-1, Math.Min(1, sentimentScore)); // Keep score between -1 and 1
+        //}
+
+        //// Categorize sentiment based on the score
+        //public static string CategorizeSentiment(double sentiment)
+        //{
+        //    if (sentiment >= -1 && sentiment < -0.7)
+        //    {
+        //        return "Extremely Negative";
+        //    }
+        //    else if (sentiment >= -0.7 && sentiment < -0.2)
+        //    {
+        //        return "Very Negative";
+        //    }
+        //    else if (sentiment >= -0.2 && sentiment < 0)
+        //    {
+        //        return "Slightly Negative";
+        //    }
+        //    else if (sentiment >= 0 && sentiment < 0.2)
+        //    {
+        //        return "Slightly Positive";
+        //    }
+        //    else if (sentiment >= 0.2 && sentiment < 0.6)
+        //    {
+        //        return "Very Positive";
+        //    }
+        //    else if (sentiment >= 0.6 && sentiment <= 1)
+        //    {
+        //        return "Extremely Positive";
+        //    }
+        //    else
+        //    {
+        //        return "Invalid Sentiment Value";
+        //    }
+        //}
+
+        //// Main method to analyze a comment
+        //public static void AnalyzeComment(string comment)
+        //{
+        //    double sentimentScore = CalculateSentimentScore(comment);
+        //    string sentimentCategory = CategorizeSentiment(sentimentScore);
+
+        //    Console.WriteLine($"Comment: \"{comment}\"");
+        //    Console.WriteLine($"Sentiment Score: {sentimentScore:F2}");
+        //    Console.WriteLine($"Sentiment Category: {sentimentCategory}");
+        //}
 
 
 
