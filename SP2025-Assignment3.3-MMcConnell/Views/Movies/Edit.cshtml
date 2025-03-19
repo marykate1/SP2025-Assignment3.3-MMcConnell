@@ -1,0 +1,73 @@
+﻿@model SP2025_Assignment3._3_MMcConnell.Models.Movie
+
+@{
+    ViewData["Title"] = "Edit Movie";
+}
+
+<h1 class="text-center mb-4">Edit Movie</h1>
+
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <form asp-action="Edit" class="card shadow p-4 rounded-3">
+            <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+            <input type="hidden" asp-for="Id" />
+
+            <div class="form-group mb-3">
+                <label asp-for="Title" class="form-label fw-bold">Title</label>
+                <input asp-for="Title" class="form-control" placeholder="Enter movie title" value="@Model.Title" />
+                <span asp-validation-for="Title" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="Genre" class="form-label fw-bold">Genre</label>
+                <select asp-for="Genre" class="form-control">
+                    <option value="Action" selected="@(Model.Genre == "Action")">Action</option>
+                    <option value="Comedy" selected="@(Model.Genre == "Comedy")">Comedy</option>
+                    <option value="Drama" selected="@(Model.Genre == "Drama")">Drama</option>
+                    <option value="Horror" selected="@(Model.Genre == "Horror")">Horror</option>
+                    <option value="Sci-Fi" selected="@(Model.Genre == "Sci-Fi")">Sci-Fi</option>
+                    <option value="Romance" selected="@(Model.Genre == "Romance")">Romance</option>
+                    <option value="Other" selected="@(Model.Genre == "Other")">Other</option>
+                </select>
+                <span asp-validation-for="Genre" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="Year" class="form-label fw-bold">Year</label>
+                <input asp-for="Year" type="number" class="form-control" min="1900" max="@DateTime.Now.Year" value="@Model.Year" />
+                <span asp-validation-for="Year" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="IMDBlink" class="form-label fw-bold">IMDB Link</label>
+                <input asp-for="IMDBlink" class="form-control" placeholder="Enter IMDB URL" value="@Model.IMDBlink" />
+                <span asp-validation-for="IMDBlink" class="text-danger"></span>
+            </div>
+
+            @* <div class="form-group mb-3"> *@
+            @*     <label asp-for="MovieImage" class="form-label fw-bold">Movie Image URL</label> *@
+            @*     <input asp-for="MovieImage" class="form-control" placeholder="Enter image URL" value="@Model.MovieImage" /> *@
+            @*     <span asp-validation-for="MovieImage" class="text-danger"></span> *@
+            @* </div> *@
+
+            @* @if (!string.IsNullOrEmpty(Model.MovieImage)) *@
+            @* { *@
+            @*     <div class="mb-3 text-center"> *@
+            @*         <img src="@Model.MovieImage" alt="Movie Image" class="img-fluid rounded-3 shadow-sm" width="200" /> *@
+            @*     </div> *@
+            @* } *@
+
+            <div class="text-center">
+                <button type="submit" class="btn btn-success w-100 mb-2">Save Changes</button>
+                <a class="btn btn-warning btn-sm" href="@Url.Action("Index", "Movies")">Back to Movie List</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

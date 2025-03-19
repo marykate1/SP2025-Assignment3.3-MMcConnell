@@ -1,0 +1,74 @@
+﻿@model IEnumerable<SP2025_Assignment3._3_MMcConnell.Models.Movie>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<!-- Link to Bootstrap CSS for styling -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
+
+<!-- Navigation Bar with Always Visible Hamburger Menu -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="/">Movie Universe</a> <!-- Creative title -->
+        <!-- Hamburger Menu Button (always visible) -->
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <!-- Menu Items (hidden in mobile view) -->
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="@Url.Action("Index", "Movies")">Movies</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="@Url.Action("Index", "Actors")">Actors</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<h1>@ViewData["Title"]</h1>
+
+<p>
+    <a class="btn btn-primary" href="@Url.Action("Create", "Movies")">Create New</a>
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Genre</th>
+            <th>Year</th>
+            <th>IMDB</th>
+            <th>Poster</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var movie in Model)
+        {
+            <tr>
+                <td>@movie.Title</td>
+                <td>@movie.Genre</td>
+                <td>@movie.Year</td>
+                <td>
+                    <a href="@movie.IMDBlink" target="_blank" class="text-decoration-none">
+                        View on IMDB
+                    </a>
+                </td>
+                <td>
+                    @* @if (@movie.MovieImage !=null & @movie.MovieImage.Length !=0){ *@
+                        <img width="50" src="@Url.Action("GetMovieImage", "Movies", new{movie.Id})" />
+                    @* } *@
+                </td>
+                <td>
+                    <a class="btn btn-info btn-sm" href="@Url.Action("Details", "Movies", new { id = movie.Id })">Details</a> |
+                    <a class="btn btn-warning btn-sm" href="@Url.Action("Edit", "Movies", new { id = movie.Id })">Edit</a> |
+                    <a class="btn btn-danger btn-sm" href="@Url.Action("Delete", "Movies", new { id = movie.Id })">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

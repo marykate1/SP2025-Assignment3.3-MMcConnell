@@ -1,0 +1,67 @@
+﻿@model IEnumerable<SP2025_Assignment3._3_MMcConnell.Models.MovieActor>
+
+@{
+    ViewData["Title"] = "Movie Actors";
+}
+
+<!-- Link to Bootstrap CSS for styling -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
+
+<!-- Navigation Bar -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="/">Movie Universe</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="@Url.Action("Index", "Movies")">Movies</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="@Url.Action("Index", "Actors")">Actors</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="@Url.Action("Index", "MovieActors")">Movie Actors</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container mt-4">
+    <h1 class="text-center mb-4">@ViewData["Title"]</h1>
+
+    <div class="text-center mb-3">
+        <a class="btn btn-primary" href="@Url.Action("Create", "MovieActors")">Create New</a>
+    </div>
+
+    <table class="table table-striped table-hover">
+        <thead class="table-dark">
+            <tr>
+                <th>@Html.DisplayNameFor(model => model.First().actor)</th>
+                <th>@Html.DisplayNameFor(model => model.First().movie)</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.actor.Id) @* Optionally display actor's name if available *@
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.movie.Id) @* Optionally display movie title if available *@
+                    </td>
+                    <td>
+                        <a class="btn btn-info btn-sm" href="@Url.Action("Details", "MovieActors", new { id = item.Id })">Details</a>
+                        <a class="btn btn-warning btn-sm" href="@Url.Action("Edit", "MovieActors", new { id = item.Id })">Edit</a>
+                        <a class="btn btn-danger btn-sm" href="@Url.Action("Delete", "MovieActors", new { id = item.Id })">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
