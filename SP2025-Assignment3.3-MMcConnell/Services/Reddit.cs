@@ -10,18 +10,6 @@ namespace SP2025_Assignment3._3_MMcConnell.Services
     public class Reddit
     {
         private string _connectionString = "Server=tcp:assignment3marykate3.database.windows.net,1433;Initial Catalog=assignment3marykate3;Persist Security Info=False;User ID=SQLadmin;Password=SQLpassword!;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
-
-        //// Fetch Reddit comments related to a Movie
-        //public static async Task<List<RedditComment>> SearchRedditAsync(Movie movie)
-        //{
-        //    return await SearchRedditAsync(movie.Title);
-        //}
-
-        //// Fetch Reddit comments related to an Actor
-        //public static async Task<List<RedditComment>> SearchRedditAsync(Actor actor)
-        //{
-        //    return await SearchRedditAsync(actor.Name);
-        //}
         public static async Task<List<RedditComment>> SearchRedditAsync(dynamic entity)
         {
             string searchQuery = entity is Movie movie ? movie.Title : (entity as Actor)?.Name;
@@ -107,14 +95,50 @@ namespace SP2025_Assignment3._3_MMcConnell.Services
             return input;
         }
 
-        // A simple sentiment analysis (can be improved with more sophisticated methods)
         private static string DetermineSentiment(string commentText)
         {
-            if (commentText.Contains("good") || commentText.Contains("great"))
+            // Normalize and clean the text
+            string normalizedText = commentText.ToLower().Trim();
+
+            // Define positive and negative words
+            string[] positiveWords = { "good", "great", "excellent", "amazing", "awesome", "fantastic", "love", "like", "enjoy",
+                                "wonderful", "satisfying", "happy", "nice", "positive", "impressive", "brilliant", "perfect",
+                                "delightful", "outstanding", "superb", "marvelous", "fabulous", "pleasant", "cheerful",
+                                "recommend", "fun", "favorite", "cool", "must", "superior", "engaged", "awesome", "classic",
+                                "iconic", "memorable", "fascinating", "absorbing", "remarkable", "impactful", "interesting",
+                                "compelling", "masterpiece", "moving", "heartfelt", "intense", "riveting", "stellar" };
+
+            string[] negativeWords = { "bad", "horrible", "terrible", "awful", "hate", "dislike", "poor", "worst", "sad",
+                                "disappointing", "boring", "unpleasant", "frustrating", "annoying", "dreadful",
+                                "mediocre", "lousy", "unhappy", "miserable", "inferior", "pathetic", "atrocious", "abysmal",
+                                "overrated", "garbage", "waste", "dishonest", "false", "yawn", "misleading", "overhyped",
+                                "forgettable", "dull", "predictable", "underwhelming", "tedious", "uninspired", "flawed",
+                                "annoying", "exaggerated", "painful", "displeased", "cringy" };
+
+            int positiveScore = 0;
+            int negativeScore = 0;
+
+            // Split comment into words and analyze
+            string[] words = normalizedText.Split(new char[] { ' ', '.', ',', '!', '?' }, StringSplitOptions.RemoveEmptyEntries);
+
+            foreach (string word in words)
+            {
+                if (positiveWords.Contains(word))
+                {
+                    positiveScore++;
+                }
+                else if (negativeWords.Contains(word))
+                {
+                    negativeScore++;
+                }
+            }
+
+            // Determine sentiment based on scores
+            if (positiveScore > negativeScore)
             {
                 return "positive";
             }
-            else if (commentText.Contains("bad") || commentText.Contains("horrible"))
+            else if (negativeScore > positiveScore)
             {
                 return "negative";
             }
@@ -123,6 +147,8 @@ namespace SP2025_Assignment3._3_MMcConnell.Services
                 return "neutral";
             }
         }
+
+
 
         private const int MaxInputLength = 200;  // Example length limit
     }

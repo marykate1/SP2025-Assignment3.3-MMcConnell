@@ -77,16 +77,48 @@ namespace SP2025_Assignment3._3_MMcConnell.Controllers
 
 
         // GET: MovieActors/Create
+        //public IActionResult Create()
+        //{
+        //    ViewData["ActorID"] = new SelectList(_context.Actors, "Id", "Id");
+        //    ViewData["MovieID"] = new SelectList(_context.Movies, "Id", "Id");
+        //    return View();
+        //}
         public IActionResult Create()
         {
-            ViewData["ActorID"] = new SelectList(_context.Actors, "Id", "Id");
-            ViewData["MovieID"] = new SelectList(_context.Movies, "Id", "Id");
+            ViewData["ActorID"] = new SelectList(_context.Actors, "Id", "Name");
+            ViewData["MovieID"] = new SelectList(_context.Movies, "Id", "Title");
             return View();
         }
 
         // POST: MovieActors/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> Create([Bind("Id,ActorID,MovieID")] MovieActor movieActor)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        _context.Add(movieActor);
+        //        await _context.SaveChangesAsync();
+        //        return RedirectToAction(nameof(Index));
+        //    }
+        //    ViewData["ActorID"] = new SelectList(_context.Actors, "Id", "Id", movieActor.ActorID);
+        //    ViewData["MovieID"] = new SelectList(_context.Movies, "Id", "Id", movieActor.MovieID);
+        //    return View(movieActor);
+        //}
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> Create([Bind("ActorID,MovieID")] MovieActor movieActor)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        _context.Add(movieActor);
+        //        await _context.SaveChangesAsync();
+        //        return RedirectToAction(nameof(Index));
+        //    }
+        //    return View(movieActor);
+        //}
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,ActorID,MovieID")] MovieActor movieActor)
@@ -97,10 +129,11 @@ namespace SP2025_Assignment3._3_MMcConnell.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ActorID"] = new SelectList(_context.Actors, "Id", "Id", movieActor.ActorID);
-            ViewData["MovieID"] = new SelectList(_context.Movies, "Id", "Id", movieActor.MovieID);
+            ViewData["ActorID"] = new SelectList(_context.Actors, "Id", "Name", movieActor.ActorID);
+            ViewData["MovieID"] = new SelectList(_context.Movies, "Id", "Title", movieActor.MovieID);
             return View(movieActor);
         }
+
 
         // GET: MovieActors/Edit/5
         public async Task<IActionResult> Edit(int? id)

@@ -9,15 +9,14 @@ namespace SP2025_Assignment3._3_MMcConnell
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Add DbContext with SQL Server
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+           
+
             // Add services for controllers with views (MVC)
             builder.Services.AddControllersWithViews();
-
             var app = builder.Build();
-
             // Configure middleware
             if (app.Environment.IsDevelopment())
             {
