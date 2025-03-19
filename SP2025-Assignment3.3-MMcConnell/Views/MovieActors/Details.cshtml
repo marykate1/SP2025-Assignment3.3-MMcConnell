@@ -1,8 +1,11 @@
-﻿@model SP2025_Assignment3._3_MMcConnell.Models.MovieActor
+﻿@model SP2025_Assignment3._3_MMcConnell.Models.MovieActorsDetails
 
 @{
     ViewData["Title"] = "Details";
 }
+<!-- Link to Bootstrap CSS for styling -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
+
 
 <h1>Details</h1>
 
@@ -10,21 +13,22 @@
     <h4>MovieActor</h4>
     <hr />
     <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.actor)
+        <dt class="col-sm-2">
+            Actor Name
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.actor.Id)
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.ActorName)
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.movie)
+        <dt class="col-sm-2">
+            Movie Title
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.movie.Id)
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.MovieTitle)
         </dd>
     </dl>
 </div>
+
 <div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    @* <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> | *@
+    <a class="btn btn-warning btn-sm" href="@Url.Action("Index", "MovieActors")">Back to List</a>
 </div>

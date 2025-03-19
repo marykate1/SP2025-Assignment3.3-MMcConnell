@@ -22,11 +22,31 @@ namespace SP2025_Assignment3._3_MMcConnell.Controllers
         // GET: MovieActors
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.MovieActor.Include(m => m.actor).Include(m => m.movie);
+            var applicationDbContext = _context.MovieActor
+                .Include(a => a.actor)
+                .Include(a => a.movie);
             return View(await applicationDbContext.ToListAsync());
         }
 
+
         // GET: MovieActors/Details/5
+        //public async Task<IActionResult> Details(int? id)
+        //{
+        //    if (id == null)
+        //    {
+        //        return NotFound();
+        //    }
+
+        //    var movieActor = await _context.MovieActor
+        //        .Include(m => m.actor)
+        //        .Include(m => m.movie)
+        //        .FirstOrDefaultAsync(m => m.Id == id);
+        //    if (movieActor == null)
+        //    {
+        //        return NotFound();
+        //    }
+
+        //    return View(movieActor);
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -35,16 +55,26 @@ namespace SP2025_Assignment3._3_MMcConnell.Controllers
             }
 
             var movieActor = await _context.MovieActor
-                .Include(m => m.actor)
-                .Include(m => m.movie)
-                .FirstOrDefaultAsync(m => m.Id == id);
+                .Include(ma => ma.actor)
+                .Include(ma => ma.movie)
+                .FirstOrDefaultAsync(ma => ma.Id == id);
+
             if (movieActor == null)
             {
                 return NotFound();
             }
 
-            return View(movieActor);
+            var viewModel = new MovieActorsDetails
+            {
+                Id = movieActor.Id,
+                ActorName = movieActor.actor.Name,
+                MovieTitle = movieActor.movie.Title
+            };
+
+            return View(viewModel); 
         }
+
+
 
         // GET: MovieActors/Create
         public IActionResult Create()
