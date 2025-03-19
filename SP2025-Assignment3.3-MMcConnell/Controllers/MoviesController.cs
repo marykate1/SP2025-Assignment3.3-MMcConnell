@@ -20,6 +20,7 @@ namespace SP2025_Assignment3._3_MMcConnell.Controllers
     public class MoviesController : Controller
     {
         private readonly ApplicationDbContext _context;
+     //   private readonly ILogger<MoviesController> _logger;  // Declare the logger
 
         public MoviesController(ApplicationDbContext context)
         {
@@ -65,6 +66,65 @@ namespace SP2025_Assignment3._3_MMcConnell.Controllers
         }
 
 
+        //// GET: Movies/Create
+        //public IActionResult Create()
+        //{
+        //    return View();
+        //}
+
+        //// POST: Movies/Create
+        //// To protect from overposting attacks, enable the specific properties you want to bind to.
+        //// For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> Create([Bind("Title,Genre,Year,IMDBlink")] Movie movie, IFormFile MovieImage)
+        //{
+        //    ViewData["MovieImageError"] = "";
+
+        //    MemoryStream memoryStream = null; // Declare memoryStream outside the try block
+
+        //    if (MovieImage != null && MovieImage.Length > 0)
+        //    {
+        //        try
+        //        {
+        //            memoryStream = new MemoryStream();  // Initialize inside the try block
+        //            await MovieImage.CopyToAsync(memoryStream);
+
+        //            // Resize the image
+        //            using var originalImage = Image.FromStream(memoryStream);
+        //            int newHeight = 250;
+        //            int newWidth = (int)((double)originalImage.Width / originalImage.Height * newHeight);
+
+        //            using var resizedImage = new Bitmap(originalImage, newWidth, newHeight);
+        //            using var outputMemoryStream = new MemoryStream();
+        //            resizedImage.Save(outputMemoryStream, ImageFormat.Jpeg); // Save as JPEG
+        //            movie.MovieImage = outputMemoryStream.ToArray();
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            // Ensure memoryStream is initialized before this
+        //            if (memoryStream != null)
+        //            {
+        //                movie.MovieImage = memoryStream.ToArray(); // Save original image if resize fails
+        //            }
+        //            ViewData["MovieImageError"] = "Error resizing image: " + ex.Message;
+        //        }
+        //    }
+        //    else
+        //    {
+        //        movie.MovieImage = new byte[0]; // Handle case when no image is uploaded
+        //    }
+
+        //    if (ModelState.IsValid)
+        //    {
+        //        _context.Add(movie);
+        //        await _context.SaveChangesAsync();
+        //        return RedirectToAction(nameof(Index));
+        //    }
+
+        //    return View(movie); // Return to the create view if validation fails
+        //}
+
         // GET: Movies/Create
         public IActionResult Create()
         {
@@ -72,75 +132,65 @@ namespace SP2025_Assignment3._3_MMcConnell.Controllers
         }
 
         // POST: Movies/Create
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> Create([Bind("Id,Title,Genre,Year,IMDBlink,MovieImage")] Movie movie, IFormFile MovieImage)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-        //        if (MovieImage != null && MovieImage.Length > 0)
-        //        {
-        //            using (var memoryStream = new MemoryStream())
-        //            {
-        //                await MovieImage.CopyToAsync(memoryStream);
-        //                movie.MovieImage = memoryStream.ToArray(); // Save the image as byte array
-        //            }
-        //        }
-
-        //        _context.Add(movie);
-        //        await _context.SaveChangesAsync();
-        //        return RedirectToAction(nameof(Index));
-        //    }
-        //    return View(movie);
-        //}
-        // POST: Movies/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Title,Genre,Year,IMDBlink,MovieImage")] Movie movie, IFormFile MovieImage)
+        public async Task<IActionResult> Create([Bind("Title,Genre,Year,IMDBlink")] Movie movie, IFormFile MovieImage)
         {
-            ViewData["MovieImageError"] = "";
-            ModelState.Remove(nameof(movie.MovieImage));
+            ViewData["MovieImageError"] = ""; // Reset the error message
 
-            if (ModelState.IsValid)
+            // Handle image upload and resizing
+            if (MovieImage != null && MovieImage.Length > 0)
             {
-                if (MovieImage != null && MovieImage.Length > 0)
+                try
                 {
-                    using var memoryStream = new MemoryStream();
+                    using var memoryStream = new MemoryStream(); // Initialize memoryStream inside the try block
                     await MovieImage.CopyToAsync(memoryStream);
 
                     // Resize the image
-                    try
-                    {
-                        using var originalImage = Image.FromStream(memoryStream);
-                        int newHeight = 250;
-                        int newWidth = (int)((double)originalImage.Width / originalImage.Height * newHeight);
+                    using var originalImage = Image.FromStream(memoryStream);
+                    int newHeight = 250;
+                    int newWidth = (int)((double)originalImage.Width / originalImage.Height * newHeight);
 
-                        using var resizedImage = new Bitmap(originalImage, newWidth, newHeight);
-                        using var outputMemoryStream = new MemoryStream();
-
-                        resizedImage.Save(outputMemoryStream, ImageFormat.Jpeg); // Save as JPEG
-                        movie.MovieImage = outputMemoryStream.ToArray();
-                    }
-                    catch (Exception ex)
-                    {
-                        ViewData["MovieImageError"] = "Error resizing image: " + ex.Message;
-                        movie.MovieImage = memoryStream.ToArray(); // Save original image if resize fails
-                    }
+                    using var resizedImage = new Bitmap(originalImage, newWidth, newHeight);
+                    using var outputMemoryStream = new MemoryStream();
+                    resizedImage.Save(outputMemoryStream, ImageFormat.Jpeg); // Save as JPEG
+                    movie.MovieImage = outputMemoryStream.ToArray();
                 }
-                else
+                catch (Exception ex)
                 {
-                    movie.MovieImage = new byte[0];
+                    // Handle any exception that occurs during image resizing
+                    ViewData["MovieImageError"] = "Error resizing image: " + ex.Message;
+                    movie.MovieImage = null; // Optionally set the movie image to null if resizing fails
+                }
+            }
+            else
+            {
+                movie.MovieImage = new byte[0]; // If no image is uploaded, set to empty byte array
+            }
+    //       _logger.LogInformation("Movie Data: Title: {Title}, Genre: {Genre}, Year: {Year}", movie.Title, movie.Genre, movie.Year);
+
+
+            // Check if the model is valid
+            if (ModelState.IsValid)
+            {
+                _context.Add(movie);
+                try
+                {
+                    await _context.SaveChangesAsync();
+                }
+                catch (Exception ex)
+                {
+        //            _logger.LogError("Error saving changes to database: " + ex.Message);
+                    ViewData["DatabaseError"] = "Error saving movie to database. Please try again.";
                 }
 
-                _context.Add(movie);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Index)); // Redirect to Index after successful creation
             }
 
+            // Return the view if validation fails
             return View(movie);
         }
+
 
         // GET: Movies/Edit/5
         public async Task<IActionResult> Edit(int? id)

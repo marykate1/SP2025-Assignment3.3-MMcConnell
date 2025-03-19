@@ -4,40 +4,38 @@
     ViewData["Title"] = "Create";
 }
 
-<!-- Link to Bootstrap CSS for styling -->
+<!-- Bootstrap CSS for styling -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
 
+<div class="container mt-5">
+    <div class="card shadow-lg rounded-3">
+        <div class="card-header bg-primary text-white text-center">
+            <h2>Create MovieActor</h2>
+        </div>
 
-<h1>Create</h1>
+        <div class="card-body">
+            <form asp-action="Create" class="needs-validation" novalidate>
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
 
-<h4>MovieActor</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="mb-3">
+                    <label asp-for="ActorID" class="form-label fw-bold"></label>
+                    <input asp-for="ActorID" class="form-control" placeholder="Enter Actor ID" required />
+                    <span asp-validation-for="ActorID" class="text-danger"></span>
+                </div>
 
-            <div class="form-group">
-                <label asp-for="ActorID" class="control-label"></label>
-                <input asp-for="ActorID" class="form-control" />
-                <span asp-validation-for="ActorID" class="text-danger"></span>
-            </div>
+                <div class="mb-3">
+                    <label asp-for="MovieID" class="form-label fw-bold"></label>
+                    <input asp-for="MovieID" class="form-control" placeholder="Enter Movie ID" required />
+                    <span asp-validation-for="MovieID" class="text-danger"></span>
+                </div>
 
-            <div class="form-group">
-                <label asp-for="MovieID" class="control-label"></label>
-                <input asp-for="MovieID" class="form-control" />
-                <span asp-validation-for="MovieID" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
+                <div class="d-grid gap-2">
+                    <button type="submit" class="btn btn-success">Create</button>
+                    <a href="@Url.Action("Index", "MovieActors")" class="btn btn-outline-secondary">Back to List</a>
+                </div>
+            </form>
+        </div>
     </div>
-</div>
-
-<div class="text-center mt-3">
-    <a href="@Url.Action("Index", "MovieActors")">Back to List</a>
 </div>
 
 @section Scripts {
