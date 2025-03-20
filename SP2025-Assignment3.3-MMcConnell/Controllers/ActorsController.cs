@@ -68,10 +68,19 @@ namespace SP2025_Assignment3._3_MMcConnell.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Gender,Age,IMDBLink,ActorImage")] Actor actor)
+        public async Task<IActionResult> Create([Bind("Id,Name,Gender,Age,IMDBLink,ActorImage")] Actor actor, IFormFile ActorImage)
         {
             if (ModelState.IsValid)
             {
+                if (ActorImage != null && ActorImage.Length > 0)
+                {
+                    using (var memoryStream = new MemoryStream())
+                    {
+                        await ActorImage.CopyToAsync(memoryStream);
+                        actor.ActorImage = memoryStream.ToArray();
+                    }
+                }
+
                 _context.Add(actor);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
