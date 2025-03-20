@@ -23,8 +23,9 @@
                     <a class="nav-link" href="@Url.Action("Index", "Actors")">Actors</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="@Url.Action("Index", "MovieActors")">Movie Actors</a>
+                    <a class="nav-link" href="@Url.Action("Index", "MovieActors")">Movie + Actor</a>
                 </li>
+           
             </ul>
         </div>
     </div>
@@ -61,8 +62,8 @@
                     <td></td>
                     <td>
                         <a class="btn btn-info btn-sm" href="@Url.Action("Details", "MovieActors", new { id = item.Id })">Click to See More Info</a>
-                        <a class="btn btn-warning btn-sm" href="@Url.Action("Edit", "MovieActors", new { id = item.Id })">Edit</a>
-                        <a class="btn btn-danger btn-sm" href="@Url.Action("Delete", "MovieActors", new { id = item.Id })">Delete</a>
+                        @* <a class="btn btn-warning btn-sm" href="@Url.Action("Edit", "MovieActors", new { id = item.Id })">Edit</a> *@
+                        @* <a class="btn btn-danger btn-sm" href="@Url.Action("Delete", "MovieActors", new { id = item.Id })">Delete</a> *@
                     </td>
                 </tr>
             }

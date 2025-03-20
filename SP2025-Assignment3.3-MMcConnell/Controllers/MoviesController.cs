@@ -65,73 +65,13 @@ namespace SP2025_Assignment3._3_MMcConnell.Controllers
             return View(movieDetailsVM);
         }
 
-
-        //// GET: Movies/Create
-        //public IActionResult Create()
-        //{
-        //    return View();
-        //}
-
-        //// POST: Movies/Create
-        //// To protect from overposting attacks, enable the specific properties you want to bind to.
-        //// For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> Create([Bind("Title,Genre,Year,IMDBlink")] Movie movie, IFormFile MovieImage)
-        //{
-        //    ViewData["MovieImageError"] = "";
-
-        //    MemoryStream memoryStream = null; // Declare memoryStream outside the try block
-
-        //    if (MovieImage != null && MovieImage.Length > 0)
-        //    {
-        //        try
-        //        {
-        //            memoryStream = new MemoryStream();  // Initialize inside the try block
-        //            await MovieImage.CopyToAsync(memoryStream);
-
-        //            // Resize the image
-        //            using var originalImage = Image.FromStream(memoryStream);
-        //            int newHeight = 250;
-        //            int newWidth = (int)((double)originalImage.Width / originalImage.Height * newHeight);
-
-        //            using var resizedImage = new Bitmap(originalImage, newWidth, newHeight);
-        //            using var outputMemoryStream = new MemoryStream();
-        //            resizedImage.Save(outputMemoryStream, ImageFormat.Jpeg); // Save as JPEG
-        //            movie.MovieImage = outputMemoryStream.ToArray();
-        //        }
-        //        catch (Exception ex)
-        //        {
-        //            // Ensure memoryStream is initialized before this
-        //            if (memoryStream != null)
-        //            {
-        //                movie.MovieImage = memoryStream.ToArray(); // Save original image if resize fails
-        //            }
-        //            ViewData["MovieImageError"] = "Error resizing image: " + ex.Message;
-        //        }
-        //    }
-        //    else
-        //    {
-        //        movie.MovieImage = new byte[0]; // Handle case when no image is uploaded
-        //    }
-
-        //    if (ModelState.IsValid)
-        //    {
-        //        _context.Add(movie);
-        //        await _context.SaveChangesAsync();
-        //        return RedirectToAction(nameof(Index));
-        //    }
-
-        //    return View(movie); // Return to the create view if validation fails
-        //}
-
         // GET: Movies/Create
+        [HttpGet]
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Movies/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Title,Genre,Year,IMDBlink")] Movie movie, IFormFile MovieImage)
@@ -167,24 +107,24 @@ namespace SP2025_Assignment3._3_MMcConnell.Controllers
             {
                 movie.MovieImage = new byte[0]; // If no image is uploaded, set to empty byte array
             }
-    //       _logger.LogInformation("Movie Data: Title: {Title}, Genre: {Genre}, Year: {Year}", movie.Title, movie.Genre, movie.Year);
+            //       _logger.LogInformation("Movie Data: Title: {Title}, Genre: {Genre}, Year: {Year}", movie.Title, movie.Genre, movie.Year);
 
 
-            // Check if the model is valid
+//            Check if the model is valid
             if (ModelState.IsValid)
             {
                 _context.Add(movie);
                 try
                 {
                     await _context.SaveChangesAsync();
-                }
+    }
                 catch (Exception ex)
                 {
         //            _logger.LogError("Error saving changes to database: " + ex.Message);
                     ViewData["DatabaseError"] = "Error saving movie to database. Please try again.";
                 }
 
-                return RedirectToAction(nameof(Index)); // Redirect to Index after successful creation
+            return RedirectToAction(nameof(Index)); // Redirect to Index after successful creation
             }
 
             // Return the view if validation fails

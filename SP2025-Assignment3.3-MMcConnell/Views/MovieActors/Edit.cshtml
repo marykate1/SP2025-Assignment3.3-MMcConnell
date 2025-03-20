@@ -1,39 +1,47 @@
 ﻿@model SP2025_Assignment3._3_MMcConnell.Models.MovieActor
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Edit MovieActor";
 }
 
-<h1>Edit</h1>
+<h1 class="text-center mb-4">@ViewData["Title"]</h1>
 
-<h4>MovieActor</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <form asp-action="Edit" class="card shadow p-4 rounded-3">
+            <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
             <input type="hidden" asp-for="Id" />
-            <div class="form-group">
-                <label asp-for="ActorID" class="control-label"></label>
-                <select asp-for="ActorID" class="form-control" asp-items="ViewBag.ActorID"></select>
+
+            <!-- Actor Dropdown -->
+            <div class="form-group mb-3">
+                <label asp-for="ActorID" class="form-label fw-bold">Actor</label>
+                <select asp-for="ActorID" class="form-control" asp-items="ViewBag.ActorID">
+                    <option value="">Select Actor</option>
+                </select>
                 <span asp-validation-for="ActorID" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="MovieID" class="control-label"></label>
-                <select asp-for="MovieID" class="form-control" asp-items="ViewBag.MovieID"></select>
+
+            <!-- Movie Dropdown -->
+            <div class="form-group mb-3">
+                <label asp-for="MovieID" class="form-label fw-bold">Movie</label>
+                <select asp-for="MovieID" class="form-control" asp-items="ViewBag.MovieID">
+                    <option value="">Select Movie</option>
+                </select>
                 <span asp-validation-for="MovieID" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+
+            <!-- Save Button -->
+            <div class="text-center">
+                <button type="submit" class="btn btn-success w-100 mb-2">Save</button>
+                <a asp-action="Index" class="btn btn-outline-secondary w-100">Back to List</a>
             </div>
         </form>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }
