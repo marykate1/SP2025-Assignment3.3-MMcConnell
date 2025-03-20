@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing.Imaging;
-using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -12,7 +10,9 @@ using SP2025_Assignment3._3_MMcConnell.Data;
 using SP2025_Assignment3._3_MMcConnell.Models;
 using System.Drawing;
 using System.Drawing.Imaging;
-using System.IO;
+using Microsoft.Data.SqlClient;
+using System.Numerics;
+
 
 
 namespace SP2025_Assignment3._3_MMcConnell.Controllers
@@ -20,6 +20,8 @@ namespace SP2025_Assignment3._3_MMcConnell.Controllers
     public class MoviesController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly string _connectionString = "Server=tcp:assignment3marykate3.database.windows.net,1433;Initial Catalog=assignment3marykate3;Persist Security Info=False;User ID=SQLadmin;Password=SQLpassword!;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
+
 
         public MoviesController(ApplicationDbContext context)
         {
@@ -35,7 +37,6 @@ namespace SP2025_Assignment3._3_MMcConnell.Controllers
         // GET: Movies/Details/5
         public async Task<IActionResult> Details(int id)
         {
-            // Fetch the movie from the database
             var movie = await _context.Movies
                 .FirstOrDefaultAsync(m => m.Id == id);
 
@@ -44,15 +45,12 @@ namespace SP2025_Assignment3._3_MMcConnell.Controllers
                 return NotFound();
             }
 
-            // Get Reddit comments for the movie
             var redditComments = await Services.Reddit.SearchRedditAsync(movie);
 
-            // Calculate the overall sentiment or score from the comments.
             var overallSentiment = redditComments.Any()
                 ? redditComments.Average(c => c.Score).ToString("F2")
                 : "No comments";
 
-            // Prepare the view model
             var movieDetailsVM = new MovieDetailsVM
             {
                 Movie = movie,
@@ -60,75 +58,53 @@ namespace SP2025_Assignment3._3_MMcConnell.Controllers
                 OverallSentiment = overallSentiment
             };
 
-            // Return the view with the populated view model
             return View(movieDetailsVM);
         }
 
-        // GET: Movies/Create
+        //    // GET: Movies/Create
         [HttpGet]
         public IActionResult Create()
         {
             return View();
         }
 
+
+        // from mia
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Title,Genre,Year,IMDBlink")] Movie movie, IFormFile MovieImage)
+        public async Task<IActionResult> Create([Bind("Id,Title,Genre,Year,IMDBLink")] Movie movie, IFormFile MovieImage)
         {
-            ViewData["MovieImageError"] = ""; // Reset the error message
+            // removes the image since it is uploaded seperatly from bind
+            ModelState.Remove(nameof(movie.MovieImage));
 
-            // Handle image upload and resizing
-            if (MovieImage != null && MovieImage.Length > 0)
-            {
-                try
-                {
-                    using var memoryStream = new MemoryStream(); // Initialize memoryStream inside the try block
-                    await MovieImage.CopyToAsync(memoryStream);
-
-                    // Resize the image
-                    using var originalImage = Image.FromStream(memoryStream);
-                    int newHeight = 250;
-                    int newWidth = (int)((double)originalImage.Width / originalImage.Height * newHeight);
-
-                    using var resizedImage = new Bitmap(originalImage, newWidth, newHeight);
-                    using var outputMemoryStream = new MemoryStream();
-                    resizedImage.Save(outputMemoryStream, ImageFormat.Jpeg); // Save as JPEG
-                    movie.MovieImage = outputMemoryStream.ToArray();
-                }
-                catch (Exception ex)
-                {
-                    // Handle any exception that occurs during image resizing
-                    ViewData["MovieImageError"] = "Error resizing image: " + ex.Message;
-                    movie.MovieImage = null; // Optionally set the movie image to null if resizing fails
-                }
-            }
-            else
-            {
-                movie.MovieImage = new byte[0]; // If no image is uploaded, set to empty byte array
-            }
-            //       _logger.LogInformation("Movie Data: Title: {Title}, Genre: {Genre}, Year: {Year}", movie.Title, movie.Genre, movie.Year);
-
-
-//            Check if the model is valid
+            // check to see if data is filled 
             if (ModelState.IsValid)
             {
-                _context.Add(movie);
-                try
+                // checks if there is an image 
+                if (MovieImage != null && MovieImage.Length > 0)
                 {
-                    await _context.SaveChangesAsync();
-    }
-                catch (Exception ex)
+                    //converts image into byte array
+                    var memoryStream = new MemoryStream();
+                    await MovieImage.CopyToAsync(memoryStream);
+                    movie.MovieImage = memoryStream.ToArray();
+                }
+                else
                 {
-        //            _logger.LogError("Error saving changes to database: " + ex.Message);
-                    ViewData["DatabaseError"] = "Error saving movie to database. Please try again.";
+                    // if there is no image it just uploads 0
+                    movie.MovieImage = new byte[0];
                 }
 
-            return RedirectToAction(nameof(Index)); // Redirect to Index after successful creation
+                // adds actor to database
+                _context.Add(movie);
+                // saves changes
+                await _context.SaveChangesAsync();
+                // returns to home page 
+                return RedirectToAction(nameof(Index));
             }
-
-            // Return the view if validation fails
+            // if save fails the form is reloaded 
             return View(movie);
         }
+
 
 
         // GET: Movies/Edit/5
@@ -166,7 +142,7 @@ namespace SP2025_Assignment3._3_MMcConnell.Controllers
                         using (var memoryStream = new MemoryStream())
                         {
                             await MovieImage.CopyToAsync(memoryStream);
-                            movie.MovieImage = memoryStream.ToArray(); // Update the movie image as byte array
+                            movie.MovieImage = memoryStream.ToArray(); 
                         }
                     }
 

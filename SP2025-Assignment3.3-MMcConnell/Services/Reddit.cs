@@ -96,10 +96,10 @@ namespace SP2025_Assignment3._3_MMcConnell.Services
 
         private static string DetermineSentiment(string commentText)
         {
-            // Normalize and clean the text
+            
             string normalizedText = commentText.ToLower().Trim();
 
-            // Define positive and negative words
+         
             string[] positiveWords = { "good", "great", "excellent", "amazing", "awesome", "fantastic", "love", "like", "enjoy",
                      "wonderful", "satisfying", "happy", "nice", "positive", "impressive", "brilliant", "perfect",
                      "delightful", "outstanding", "superb", "marvelous", "fabulous", "pleasant", "cheerful",
@@ -121,7 +121,6 @@ namespace SP2025_Assignment3._3_MMcConnell.Services
             int positiveScore = 0;
             int negativeScore = 0;
 
-            // Split comment into words and analyze
             string[] words = normalizedText.Split(new char[] { ' ', '.', ',', '!', '?' }, StringSplitOptions.RemoveEmptyEntries);
 
             foreach (string word in words)
@@ -136,7 +135,6 @@ namespace SP2025_Assignment3._3_MMcConnell.Services
                 }
             }
 
-            // Determine sentiment based on scores
             if (positiveScore > negativeScore)
             {
                 return "positive";
@@ -151,6 +149,6 @@ namespace SP2025_Assignment3._3_MMcConnell.Services
             }
         }
 
-        private const int MaxInputLength = 200;  // Example length limit
+        private const int MaxInputLength = 200; 
     }
 }

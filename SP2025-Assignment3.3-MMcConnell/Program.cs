@@ -1,5 +1,6 @@
 using SP2025_Assignment3._3_MMcConnell.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Http.Features;
 
 namespace SP2025_Assignment3._3_MMcConnell
 {
@@ -11,8 +12,13 @@ namespace SP2025_Assignment3._3_MMcConnell
 
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+            
+            builder.Services.Configure<FormOptions>(options =>
+            {
+                options.MultipartBodyLengthLimit = 10 * 1024 * 1024; // 10 MB limit
+            });
 
-           
+
 
             // Add services for controllers with views (MVC)
             builder.Services.AddControllersWithViews();
@@ -38,14 +44,6 @@ namespace SP2025_Assignment3._3_MMcConnell
             app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");
-
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllerRoute(
-                    name: "default",
-                    pattern: "{controller=Movies}/{action=Index}/{id?}");
-            });
-
 
             // Run the application
             app.Run();

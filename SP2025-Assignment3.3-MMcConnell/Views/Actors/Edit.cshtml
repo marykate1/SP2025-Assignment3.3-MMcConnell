@@ -37,57 +37,57 @@
 
 <div class="row justify-content-center">
     <div class="col-md-6">
-        <form asp-action="Edit" class="card shadow p-4 rounded-3">
-            <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+       <form asp-action="Edit" method="post" enctype="multipart/form-data" class="card shadow p-4 rounded-3">
+    @Html.AntiForgeryToken()
+    <input type="hidden" asp-for="Id" />
 
-            <input type="hidden" asp-for="Id" />
+    <div class="form-group mb-3">
+        <label asp-for="Name" class="form-label"></label>
+        <input asp-for="Name" class="form-control" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
 
-            <!-- Actor Name -->
-            <div class="form-group mb-3">
-                <label asp-for="Name" class="form-label fw-bold">Name</label>
-                <input asp-for="Name" class="form-control" placeholder="Enter actor's name" />
-                <span asp-validation-for="Name" class="text-danger"></span>
-            </div>
+    <div class="form-group mb-3">
+        <label asp-for="Gender" class="form-label"></label>
+        <input asp-for="Gender" class="form-control" />
+        <span asp-validation-for="Gender" class="text-danger"></span>
+    </div>
 
-            <!-- Gender Dropdown -->
-            <div class="form-group mb-3">
-                <label asp-for="Gender" class="form-label fw-bold">Gender</label>
-                <select asp-for="Gender" class="form-control">
-                    <option value="Male" selected="@(Model.Gender == "Male")">Male</option>
-                    <option value="Female" selected="@(Model.Gender == "Female")">Female</option>
-                    <option value="Other" selected="@(Model.Gender == "Other")">Other</option>
-                </select>
-                <span asp-validation-for="Gender" class="text-danger"></span>
-            </div>
+    <div class="form-group mb-3">
+        <label asp-for="Age" class="form-label"></label>
+        <input asp-for="Age" class="form-control" type="number" />
+        <span asp-validation-for="Age" class="text-danger"></span>
+    </div>
 
-            <!-- Age Field -->
-            <div class="form-group mb-3">
-                <label asp-for="Age" class="form-label fw-bold">Age</label>
-                <input asp-for="Age" type="number" class="form-control" min="0" />
-                <span asp-validation-for="Age" class="text-danger"></span>
-            </div>
+    <div class="form-group mb-3">
+        <label asp-for="IMDBLink" class="form-label"></label>
+        <input asp-for="IMDBLink" class="form-control" />
+        <span asp-validation-for="IMDBLink" class="text-danger"></span>
+    </div>
 
-            <!-- IMDB Link -->
-            <div class="form-group mb-3">
-                <label asp-for="IMDBLink" class="form-label fw-bold">IMDB Link</label>
-                <input asp-for="IMDBLink" class="form-control" placeholder="Enter IMDB URL" />
-                <span asp-validation-for="IMDBLink" class="text-danger"></span>
-            </div>
+    <!-- Show current image if available -->
+    @if (Model.ActorImage != null && Model.ActorImage.Length > 0)
+    {
+        <div class="mb-3">
+            <label class="form-label">Current Image:</label><br />
+            <img src="data:image/png;base64,@Convert.ToBase64String(Model.ActorImage)" alt="Actor Image" class="img-thumbnail" style="max-width: 200px;" />
+        </div>
+    }
+    else
+    {
+        <p>No image available.</p>
+    }
 
-            <!-- Actor Image URL -->
-            <div class="form-group mb-3">
-                <label asp-for="ActorImage" class="form-label fw-bold">Actor Image URL</label>
-                <input asp-for="ActorImage" class="form-control" placeholder="Enter image URL" />
-                <span asp-validation-for="ActorImage" class="text-danger"></span>
-            </div>
+    <div class="form-group mb-3">
+        <label class="form-label">Upload New Image (optional):</label>
+        <input type="file" name="imageFile" class="form-control" />
+    </div>
 
-            <div class="text-center">
-                <!-- Save Button -->
-                <button type="submit" class="btn btn-success w-100 mb-2">Save Changes</button>
-                <!-- Back to List -->
-                <a class="btn btn-warning btn-sm" href="@Url.Action("Index", "Actors")">Back to List</a>
-            </div>
-        </form>
+    <button type="submit" class="btn btn-success w-100">Save Changes</button>
+   
+    <a href="@Url.Action("Index", "Actors")" class="btn btn-secondary w-100 mt-2">Cancel</a>
+</form>
+
     </div>
 </div>
 

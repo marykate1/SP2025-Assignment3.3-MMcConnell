@@ -11,6 +11,7 @@ using SP2025_Assignment3._3_MMcConnell.Data;
 using SP2025_Assignment3._3_MMcConnell.Models;
 using SP2025_Assignment3._3_MMcConnell.Services;
 
+
 namespace SP2025_Assignment3._3_MMcConnell.Controllers
 {
     public class ActorsController : Controller
@@ -65,70 +66,42 @@ namespace SP2025_Assignment3._3_MMcConnell.Controllers
             return View();
         }
 
-        // POST: Actors/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        // FROM MIA
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Gender,Age,IMDBLink,ActorImage")] Actor actor, IFormFile ActorImage)
+        public async Task<IActionResult> Create([Bind("Name,Gender,Age,IMDBLink")] Actor actor, IFormFile ActorImage)
         {
-            ViewData["ActorImageError"] = "";
-            //  ModelState.Remove(nameof(actor.ActorImage));
-            
+            // removes the image since it is uploaded seperatly from bind
+            ModelState.Remove(nameof(actor.ActorImage));
+
+            // check to see if data is filled 
             if (ModelState.IsValid)
             {
-                if (ActorImage != null && ActorImage.Length > 0) 
+                // checks if there is an image 
+                if (ActorImage != null && ActorImage.Length > 0)
                 {
-                    using var memoryStream = new MemoryStream();
+                    //converts image into byte array
+                    var memoryStream = new MemoryStream();
                     await ActorImage.CopyToAsync(memoryStream);
-                    memoryStream.Position = 0;  // Reset position before reading the stream
-
-                    try
-                    {
-                        using var orginialImage = Image.FromStream(memoryStream);
-                        int newHeight = 250;
-                        int newWidth = (int)((double)orginialImage.Width / orginialImage.Height * newHeight);
-
-                        using var resizedImage = new Bitmap(orginialImage, newWidth, newHeight);
-                        using var outputMemoryStream = new MemoryStream();
-                        resizedImage.Save(outputMemoryStream, ImageFormat.Jpeg);
-
-                        actor.ActorImage = outputMemoryStream.ToArray();
-                    }
-                    catch (Exception ex) {
-                        ViewData["ActorImageError"] = "Invalid image uploaded. Data was not saved.";
-                        return View();
-                    }
-                } else
+                    actor.ActorImage = memoryStream.ToArray();
+                }
+                else
                 {
+                    // if there is no image it just uploads 0
                     actor.ActorImage = new byte[0];
                 }
 
+                // adds actor to database
                 _context.Add(actor);
+                // saves changes
                 await _context.SaveChangesAsync();
+                // returns to home page 
                 return RedirectToAction(nameof(Index));
             }
+            // if save fails the form is reloaded 
             return View(actor);
         }
-
-
-            //if (ModelState.IsValid)
-            //{
-            //    if (ActorImage != null && ActorImage.Length > 0)
-            //    {
-            //        using (var memoryStream = new MemoryStream())
-            //        {
-            //            await ActorImage.CopyToAsync(memoryStream);
-            //            actor.ActorImage = memoryStream.ToArray();
-            //        }
-            //    }
-
-            //    _context.Add(actor);
-            //    await _context.SaveChangesAsync();
-            //    return RedirectToAction(nameof(Index));
-            //}
-            //return View(actor);
-        
+       
         public async Task<IActionResult> GetActorPhoto(int id)
         {
             var actor = await _context.Actors
@@ -190,6 +163,7 @@ namespace SP2025_Assignment3._3_MMcConnell.Controllers
             }
             return View(actor);
         }
+
 
         // GET: Actors/Delete/5
         public async Task<IActionResult> Delete(int? id)
