@@ -20,7 +20,6 @@ namespace SP2025_Assignment3._3_MMcConnell.Controllers
     public class MoviesController : Controller
     {
         private readonly ApplicationDbContext _context;
-     //   private readonly ILogger<MoviesController> _logger;  // Declare the logger
 
         public MoviesController(ApplicationDbContext context)
         {
