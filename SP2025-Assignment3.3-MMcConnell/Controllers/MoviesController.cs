@@ -20,8 +20,6 @@ namespace SP2025_Assignment3._3_MMcConnell.Controllers
     public class MoviesController : Controller
     {
         private readonly ApplicationDbContext _context;
-        private readonly string _connectionString = "Server=tcp:assignment3marykate3.database.windows.net,1433;Initial Catalog=assignment3marykate3;Persist Security Info=False;User ID=SQLadmin;Password=SQLpassword!;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
-
 
         public MoviesController(ApplicationDbContext context)
         {
