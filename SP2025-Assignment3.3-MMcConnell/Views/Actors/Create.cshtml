@@ -40,22 +40,24 @@
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-6">
-            <form asp-controller="Actors" asp-action="Create" method="post" enctype="multipart/form-data">
-                @Html.AntiForgeryToken()
+            <form asp-action="Create" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            @* <form asp-controller="Actors" asp-action="Create" method="post" enctype="multipart/form-data"> *@
+                @* @Html.AntiForgeryToken() *@
 
                 <!-- Validation Summary -->
-                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+       
 
                 <!-- Name Field -->
-                <div class="form-group mb-3">
-                    <label asp-for="Name" class="form-label"></label>
+                <div class="form-group">
+                    <label asp-for="Name" class="control-label"></label>
                     <input asp-for="Name" class="form-control" placeholder="Enter actor's name" />
                     <span asp-validation-for="Name" class="text-danger"></span>
                 </div>
 
                 <!-- Gender Field (Dropdown) -->
-                <div class="form-group mb-3">
-                    <label asp-for="Gender" class="form-label"></label>
+                <div class="form-group">
+                    <label asp-for="Gender" class="control-label"></label>
                     <select asp-for="Gender" class="form-select">
                         <option value="">Select Gender</option>
                         <option value="Male">Male</option>
@@ -65,23 +67,23 @@
                 </div>
 
                 <!-- Age Field (Number Input) -->
-                <div class="form-group mb-3">
-                    <label asp-for="Age" class="form-label"></label>
+                <div class="form-group">
+                    <label asp-for="Age" class="control-label"></label>
                     <input asp-for="Age" type="number" class="form-control" placeholder="Enter actor's age" min="1" />
                     <span asp-validation-for="Age" class="text-danger"></span>
                 </div>
 
                 <!-- IMDB Link Field -->
-                <div class="form-group mb-3">
-                    <label asp-for="IMDBLink" class="form-label"></label>
+                <div class="form-group">
+                    <label asp-for="IMDBLink" class="control-label"></label>
                     <input asp-for="IMDBLink" class="form-control" placeholder="Enter IMDB link" />
                     <span asp-validation-for="IMDBLink" class="text-danger"></span>
                 </div>
 
                 <!-- Actor Image Upload -->
-                <div class="form-group mb-3">
-                    <label asp-for="ActorImage" class="form-label">Upload Actor Image</label>
-                    <input type="file" name="ActorImage" class="form-control" />
+                <div class="form-group">
+                    <label asp-for="ActorImage" class="control-label">Upload Actor Image</label>
+                    <input type="file" id="ActorImage" name="ActorImage" class="form-control" />
                     <span asp-validation-for="ActorImage" class="text-danger"></span>
                 </div>
 

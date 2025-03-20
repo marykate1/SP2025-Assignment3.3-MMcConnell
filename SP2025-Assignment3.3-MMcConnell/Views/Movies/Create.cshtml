@@ -22,36 +22,37 @@
 
                 <!-- Title Field -->
                 <div class="form-group mb-3">
-                    <label asp-for="Title" class="form-label"></label>
+                    <label asp-for="Title" class="control-label"></label>
                     <input asp-for="Title" class="form-control" placeholder="Enter movie title" />
                     <span asp-validation-for="Title" class="text-danger"></span>
                 </div>
 
                 <!-- Genre Field -->
                 <div class="form-group mb-3">
-                    <label asp-for="Genre" class="form-label"></label>
+                    <label asp-for="Genre" class="control-label"></label>
                     <input asp-for="Genre" class="form-control" placeholder="Enter movie genre" />
                     <span asp-validation-for="Genre" class="text-danger"></span>
                 </div>
 
                 <!-- Year Field -->
                 <div class="form-group mb-3">
-                    <label asp-for="Year" class="form-label"></label>
+                    <label asp-for="Year" class="control-label"></label>
                     <input asp-for="Year" class="form-control" placeholder="Enter release year" />
                     <span asp-validation-for="Year" class="text-danger"></span>
                 </div>
 
                 <!-- IMDB Link Field -->
                 <div class="form-group mb-3">
-                    <label asp-for="IMDBlink" class="form-label"></label>
+                    <label asp-for="IMDBlink" class="control-label"></label>
                     <input asp-for="IMDBlink" class="form-control" placeholder="Enter IMDB link" />
                     <span asp-validation-for="IMDBlink" class="text-danger"></span>
                 </div>
 
                 <!-- Movie Image Upload -->
                 <div class="form-group mb-3">
-                    <label asp-for="MovieImage" class="form-label">Upload Movie Image</label>
-                    <input type="file" name="MovieImage" class="form-control" />
+                    <label asp-for="MovieImage" class="control-label">Upload Movie Image</label>
+                    @* <input type="file" id="MovieImage" name="MovieImage" class="form-control" /> *@
+                    <input asp-for="MovieImage" type="file" class="form-control" />
                     <span asp-validation-for="MovieImage" class="text-danger"></span>
                 </div>
 
@@ -74,4 +75,41 @@
     <!-- Validation scripts for client-side validation -->
     <script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.19.0/jquery.validate.min.js"></script>
     <script src="https://ajax.aspnetcdn.com/ajax/jquery.validate.unobtrusive/3.2.8/jquery.validate.unobtrusive.min.js"></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Log form submission data
+            document.querySelector("form").addEventListener("submit", function (event) {
+                console.log("Form submitted!");
+
+                console.log("Title:", document.getElementById("Title").value);
+                console.log("Genre:", document.getElementById("Genre").value);
+                console.log("Year:", document.getElementById("Year").value);
+                console.log("IMDB Link:", document.getElementById("IMDBlink").value);
+
+                var fileInput = document.getElementById("MovieImage");
+                if (fileInput.files.length > 0) {
+                    console.log("Movie Image Selected:", fileInput.files[0].name);
+                } else {
+                    console.log("No image uploaded.");
+                }
+            });
+        });
+    </script>
+    <script>
+        document.querySelector("form").addEventListener("submit", function (event) {
+            const title = document.getElementById("Title").value;
+            const genre = document.getElementById("Genre").value;
+            const year = document.getElementById("Year").value;
+            const imdb = document.getElementById("IMDBlink").value;
+            const file = document.getElementById("MovieImage").files[0];
+
+            console.log("Title: ", title);
+            console.log("Genre: ", genre);
+            console.log("Year: ", year);
+            console.log("IMDB Link: ", imdb);
+            console.log("File: ", file);
+        });
+    </script>
 }
+

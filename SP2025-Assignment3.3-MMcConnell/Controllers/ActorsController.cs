@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.Drawing.Imaging;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -70,15 +72,36 @@ namespace SP2025_Assignment3._3_MMcConnell.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Name,Gender,Age,IMDBLink,ActorImage")] Actor actor, IFormFile ActorImage)
         {
+            ViewData["ActorImageError"] = "";
+            //  ModelState.Remove(nameof(actor.ActorImage));
+            
             if (ModelState.IsValid)
             {
-                if (ActorImage != null && ActorImage.Length > 0)
+                if (ActorImage != null && ActorImage.Length > 0) 
                 {
-                    using (var memoryStream = new MemoryStream())
+                    using var memoryStream = new MemoryStream();
+                    await ActorImage.CopyToAsync(memoryStream);
+                    memoryStream.Position = 0;  // Reset position before reading the stream
+
+                    try
                     {
-                        await ActorImage.CopyToAsync(memoryStream);
-                        actor.ActorImage = memoryStream.ToArray();
+                        using var orginialImage = Image.FromStream(memoryStream);
+                        int newHeight = 250;
+                        int newWidth = (int)((double)orginialImage.Width / orginialImage.Height * newHeight);
+
+                        using var resizedImage = new Bitmap(orginialImage, newWidth, newHeight);
+                        using var outputMemoryStream = new MemoryStream();
+                        resizedImage.Save(outputMemoryStream, ImageFormat.Jpeg);
+
+                        actor.ActorImage = outputMemoryStream.ToArray();
                     }
+                    catch (Exception ex) {
+                        ViewData["ActorImageError"] = "Invalid image uploaded. Data was not saved.";
+                        return View();
+                    }
+                } else
+                {
+                    actor.ActorImage = new byte[0];
                 }
 
                 _context.Add(actor);
@@ -86,6 +109,35 @@ namespace SP2025_Assignment3._3_MMcConnell.Controllers
                 return RedirectToAction(nameof(Index));
             }
             return View(actor);
+        }
+
+
+            //if (ModelState.IsValid)
+            //{
+            //    if (ActorImage != null && ActorImage.Length > 0)
+            //    {
+            //        using (var memoryStream = new MemoryStream())
+            //        {
+            //            await ActorImage.CopyToAsync(memoryStream);
+            //            actor.ActorImage = memoryStream.ToArray();
+            //        }
+            //    }
+
+            //    _context.Add(actor);
+            //    await _context.SaveChangesAsync();
+            //    return RedirectToAction(nameof(Index));
+            //}
+            //return View(actor);
+        
+        public async Task<IActionResult> GetActorPhoto(int id)
+        {
+            var actor = await _context.Actors
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (actor == null)
+            {
+                return NotFound();
+            }
+            return File(actor.ActorImage, "image/jpg");
         }
 
         // GET: Actors/Edit/5
