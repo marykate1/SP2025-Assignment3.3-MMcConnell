@@ -43,6 +43,7 @@ namespace SP2025_Assignment3._3_MMcConnell.Controllers
 
             var redditComments = await Services.Reddit.SearchRedditAsync(actor);
 
+
             var overallSentiment = redditComments.Any()
                 ? redditComments.Average(c => c.Score).ToString("F2")
                 : "No comments";

@@ -107,7 +107,7 @@ namespace SP2025_Assignment3._3_MMcConnell.Services
                      "iconic", "memorable", "fascinating", "absorbing", "remarkable", "impactful", "interesting",
                      "compelling", "masterpiece", "moving", "heartfelt", "intense", "riveting", "stellar",
                      "congratulations", "best", "signed up", "bullrun", "beautiful", "support", "positive impact",
-                     "admirable", "loyalty", "fan", "historical", "generous" };
+                     "admirable", "loyalty", "fan", "historical", "generous", "yes","love", "loved", "remake","with","and", "wow" };
 
             string[] negativeWords = { "bad", "horrible", "terrible", "awful", "hate", "dislike", "poor", "worst", "sad",
                      "disappointing", "boring", "unpleasant", "frustrating", "annoying", "dreadful",
@@ -116,7 +116,7 @@ namespace SP2025_Assignment3._3_MMcConnell.Services
                      "forgettable", "dull", "predictable", "underwhelming", "tedious", "uninspired", "flawed",
                      "annoying", "exaggerated", "painful", "displeased", "cringy", "forgot", "redundant",
                      "backwards", "biased", "slave", "propaganda", "extreme", "misguided", "downvoted", "opposed",
-                     "confused", "unrealistic", "narrowing", "contradictory", "disillusioned" };
+                     "confused", "unrealistic", "narrowing", "contradictory", "disillusioned", "no", "don't", "not","didn't" };
 
             int positiveScore = 0;
             int negativeScore = 0;
@@ -146,6 +146,21 @@ namespace SP2025_Assignment3._3_MMcConnell.Services
             else
             {
                 return "neutral";
+            }
+
+            double OverallSentiment = (positiveScore - negativeScore) / 25.0;
+
+            if (positiveScore > negativeScore)
+            {
+                return $"positive (Score: {OverallSentiment:F2})";
+            }
+            else if (negativeScore > positiveScore)
+            {
+                return $"negative (Score: {OverallSentiment:F2})";
+            }
+            else
+            {
+                return $"neutral (Score: {OverallSentiment:F2})";
             }
         }
 
