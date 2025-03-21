@@ -10,5 +10,6 @@ namespace SP2025_Assignment3._3_MMcConnell.Data
         public DbSet<Movie> Movies { get; set; }
         public DbSet<Actor> Actors { get; set; }
         public DbSet<MovieActor> MovieActor {  get; set; }
+        public DbSet<Test> test {  get; set; }
     }
 }
